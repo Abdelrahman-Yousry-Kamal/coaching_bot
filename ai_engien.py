@@ -49,22 +49,26 @@ def retrieve_relevant_data(query, vector_store, k=3):
 
 def create_prompt_template():
     return ChatPromptTemplate.from_template(
-        """You are a nutrition and fitness coach. Answer the question based on the following information:
+    """You are a coaching and food nutrition expert.
 
-        - Weight: {weight_kg} kg
-        - Height: {height_cm} cm
-        - Age: {age} years
-        - Gender: {gender}
-        - Activity Level: {activity_level}
-        - Food Data:
-        {food_context}
+Answer the user's question using the context provided below. Be friendly and personalized.
 
-        Conversation so far:
-        {chat_history}
+USER PROFILE:
+- Weight: {weight_kg} kg
+- Height: {height_cm} cm
+- Age: {age}
+- Gender: {gender}
+- Activity Level: {activity_level}
 
-        User Question: {question}
-        Answer:"""
-    )
+RETRIEVED NUTRITION DATA:
+{nutrition_context}
+
+Conversation so far:
+{chat_history}
+
+User: {question}
+Assistant:"""
+)
 
 def setup_llm_chain(llm, prompt):
     memory = ConversationBufferMemory(
@@ -125,3 +129,4 @@ if __name__ == "__main__":
         run_nutrition_bot()
     except Exception as e:
         print(f"Error running bot: {str(e)}")
+
