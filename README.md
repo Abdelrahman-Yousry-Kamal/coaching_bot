@@ -1,4 +1,5 @@
-Coaching Bot 🏃‍♂️💪
+# Coaching Bot 🏃‍♂️💪
+
 An intelligent AI-powered coaching assistant that provides personalized health, nutrition, and wellness guidance through advanced conversational AI and data-driven insights.
 🌟 Overview
 Coaching Bot combines the power of Retrieval-Augmented Generation (RAG) with specialized health and nutrition datasets to deliver contextually relevant, evidence-based coaching advice. Whether you're looking to improve your fitness routine, optimize your nutrition, or enhance your overall wellness, this bot provides personalized recommendations tailored to your unique needs and goals.
