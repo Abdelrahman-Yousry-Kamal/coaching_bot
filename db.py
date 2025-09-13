@@ -1,5 +1,3 @@
-# nutrition_manager.py
-
 import json
 import os
 import re
@@ -11,9 +9,7 @@ USERS_DIR = os.path.join(DATA_DIR, "users")
 INDEX_FILE = os.path.join(DATA_DIR, "index.json")
 MENUS_FILE = os.path.join(DATA_DIR, "menus.json")
 
-# JSON file management
 def ensure_data_dir():
-    # Create directories if they don't exist
     if not os.path.exists(DATA_DIR):
         os.makedirs(DATA_DIR, exist_ok=True)
     if not os.path.exists(USERS_DIR):
@@ -23,20 +19,17 @@ def ensure_data_dir():
             json.dump({}, f, ensure_ascii=False, indent=4)
 
 def load_index():
-    # Load index.json
     ensure_data_dir()
     with open(INDEX_FILE, "r", encoding="utf-8") as f:
         return json.load(f)
 
 def save_index(index: dict):
-    # Save index.json with a temporary file to avoid corruption
     tmp = INDEX_FILE + ".tmp"
     with open(tmp, "w", encoding="utf-8") as f:
         json.dump(index, f, ensure_ascii=False, indent=4)
     os.replace(tmp, INDEX_FILE)
 
 def sanitize_filename(name: str) -> str:
-    # Sanitize filename for safe storage
     name = name.strip().lower()
     name = re.sub(r"\s+", "_", name)
     name = re.sub(r"[^\w\u0600-\u06FF\-]", "", name)
@@ -45,7 +38,6 @@ def sanitize_filename(name: str) -> str:
     return name
 
 def user_filename(user_id: str, name: str) -> str:
-    # Generate filename based on name and user_id
     safe = sanitize_filename(name)
     filename = f"{safe}_{user_id}.json"
     return os.path.join(USERS_DIR, filename)
@@ -53,7 +45,6 @@ def user_filename(user_id: str, name: str) -> str:
 def create_user_file(user_id: str, name: str, age: Optional[int]=None,
                      weight: Optional[float]=None, height: Optional[float]=None,
                      goal: Optional[str]=None, activity_level: Optional[str]=None) -> str:
-    # Create a new user file and update index.json
     ensure_data_dir()
     index = load_index()
     if user_id in index:
@@ -69,7 +60,7 @@ def create_user_file(user_id: str, name: str, age: Optional[int]=None,
         "goal": goal,
         "activity_level": activity_level,
         "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "language": "en",  # Default, can be updated
+        "language": "en",  
         "chats": [],
         "nutrition": {}
     }
@@ -83,13 +74,11 @@ def create_user_file(user_id: str, name: str, age: Optional[int]=None,
     return path
 
 def get_user_file_path(user_id: str) -> Optional[str]:
-    # Retrieve user file path from index.json
     ensure_data_dir()
     index = load_index()
     return index.get(user_id)
 
 def load_user_data(user_id: str) -> Optional[dict]:
-    # Load user data from their JSON file
     path = get_user_file_path(user_id)
     if not path or not os.path.exists(path):
         return None
@@ -97,7 +86,6 @@ def load_user_data(user_id: str) -> Optional[dict]:
         return json.load(f)
 
 def save_user_data(user_id: str, data: dict) -> bool:
-    # Save user data to their JSON file
     path = get_user_file_path(user_id)
     if not path:
         return False
@@ -108,7 +96,6 @@ def save_user_data(user_id: str, data: dict) -> bool:
     return True
 
 def add_chat(user_id: str, user_message: str, bot_response: str):
-    # Add a new chat entry to the user's file
     data = load_user_data(user_id)
     if data is None:
         create_user_file(user_id, "unknown")
@@ -122,14 +109,12 @@ def add_chat(user_id: str, user_message: str, bot_response: str):
     save_user_data(user_id, data)
 
 def get_chats(user_id: str):
-    # Retrieve chat history for the user
     data = load_user_data(user_id)
     if not data:
         return []
     return data.get("chats", [])
 
 def rename_user_file(user_id: str, new_name: str) -> Optional[str]:
-    # Rename user file and update index.json
     path = get_user_file_path(user_id)
     if not path or not os.path.exists(path):
         return None
@@ -146,9 +131,7 @@ def rename_user_file(user_id: str, new_name: str) -> Optional[str]:
         save_user_data(user_id, data)
     return new_path
 
-# Nutrition calculations
 def validate_inputs(weight, height, age, gender, activity_level, goal, surplus=400):
-    # Validate user inputs
     if not (30 <= weight <= 300):
         raise ValueError("Weight must be between 30kg and 300kg")
     if not (120 <= height <= 250):
@@ -166,7 +149,6 @@ def validate_inputs(weight, height, age, gender, activity_level, goal, surplus=4
     return True
 
 def calculate_bmr(weight, height, age, gender):
-    # Calculate Basal Metabolic Rate (BMR)
     if gender.lower() == "male":
         return (10 * weight) + (6.25 * height) - (5 * age) + 5
     elif gender.lower() == "female":
@@ -175,7 +157,6 @@ def calculate_bmr(weight, height, age, gender):
         raise ValueError("Gender must be 'male' or 'female'")
 
 def calculate_tdee(bmr, activity_level):
-    # Calculate Total Daily Energy Expenditure (TDEE)
     factors = {
         "sedentary": 1.2,
         "light": 1.375,
@@ -188,7 +169,6 @@ def calculate_tdee(bmr, activity_level):
     return bmr * factors[activity_level]
 
 def adjust_calories_for_goal(tdee, goal, surplus=400):
-    # Adjust calories based on goal
     goal = goal.lower()
     if goal == "loss":
         return tdee - 500
@@ -202,13 +182,12 @@ def adjust_calories_for_goal(tdee, goal, surplus=400):
         raise ValueError("Goal must be 'loss', 'gain', or 'maintenance'")
 
 def calculate_macros(total_calories, goal):
-    # Calculate macronutrients (protein, carbs, fat)
     goal = goal.lower()
     if goal == "loss":
         split = {"protein": 0.40, "carbs": 0.30, "fat": 0.30}
     elif goal == "gain":
         split = {"protein": 0.35, "carbs": 0.40, "fat": 0.25}
-    else:  # maintenance
+    else:  
         split = {"protein": 0.30, "carbs": 0.40, "fat": 0.30}
 
     return {
@@ -218,7 +197,6 @@ def calculate_macros(total_calories, goal):
     }
 
 def calculate_nutrition(user_id: str):
-    # Calculate calories/macros and store in user file
     data = load_user_data(user_id)
     if not data or not all([data.get("weight"), data.get("height"), data.get("age"), data.get("gender"), data.get("activity_level"), data.get("goal")]):
         return "Please provide all required data (weight, height, age, gender, activity level, goal)"
@@ -251,7 +229,6 @@ def calculate_nutrition(user_id: str):
     except ValueError as e:
         return str(e)
 
-# Main program for testing
 if __name__ == "__main__":
     print("=== Dietitian: Your Nutrition Assistant ===")
     print("Welcome to Dietitian! I'm your smart assistant designed to guide you step-by-step in your health journey...")
@@ -260,7 +237,6 @@ if __name__ == "__main__":
     name = input("Enter your name: ").strip()
     create_user_file(user_id, name)
 
-    # Collect data step-by-step
     data = load_user_data(user_id)
     data["weight"] = float(input("Enter weight (kg): "))
     data["height"] = float(input("Enter height (cm): "))
