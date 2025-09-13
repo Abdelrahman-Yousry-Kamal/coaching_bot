@@ -11,9 +11,16 @@ API_KEY = os.getenv("Gemini_api_key")
 
 chat = ChatGoogleGenerativeAI(google_api_key=API_KEY , model="gemini-2.5-flash")
 user_input = input("enter your question: ")
-prompt  = ChatPromptTemplate.from_template("you are coaching and food nutrition expert. answer the question based on the following context: {question}")
+prompt  = ChatPromptTemplate.from_template("you are coaching and food nutrition expert. answer the question based on the following context: {question}
+- Weight: {user_info['weight_kg']} kg
+- Height: {user_info['height_cm']} cm
+- Age: {user_info['age']}
+- Gender: {user_info['gender']}
+- Activity Level: {user_info['activity_level']}
+")
 
 llm = prompt | chat | StrOutputParser()
 
 for chunk in llm.invoke({"question": user_input}, stream=True):
     print(chunk, end="", flush=True)
+
