@@ -1,0 +1,20 @@
+Installation and Setup
+Prerequisites
+# Python dependencies
+pip install flask flask-cors pandas
+pip install google-generativeai langchain-google-genai
+pip install chromadb sentence-transformers
+Environment Configuration
+# Required environment variable
+export GEMINI_API_KEY="your-google-gemini-api-key"
+File Structure
+nutrition-project/
+├── flask_server.py          # Main Flask application
+├── chatbot.py              # AI chatbot functionality  
+├── db.py                   # Database operations
+├── index.html              # Frontend UI
+├── cleaned_food_data.csv   # Nutrition database
+├── data/                   # User data storage
+│   ├── users/             # Individual user files
+│   └── index.json         # User index
+└── uploads/               # Temporary file storage
