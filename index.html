@@ -1,0 +1,1505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dietitian - Your AI Nutrition Coach</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+
+        /* Login Form Styles */
+        .login-form {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.8s ease-out;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .login-form.hidden {
+            display: none;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-header h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .form-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+        }
+
+        .switch-link {
+            text-align: center;
+            color: #667eea;
+            cursor: pointer;
+            text-decoration: underline;
+            font-size: 0.95em;
+            transition: color 0.3s ease;
+        }
+
+        .switch-link:hover {
+            color: #764ba2;
+        }
+
+        /* Registration Form Styles */
+        .registration-form {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.8s ease-out;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .registration-form.hidden {
+            display: none;
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            animation: slideUp 0.8s ease-out;
+            max-width: 900px;
+            margin: 0 auto;
+            display: none;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        .dashboard-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 30px;
+            border-radius: 20px 20px 0 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .logout-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .dashboard-header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+        }
+
+        .dashboard-header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .dashboard-content {
+            padding: 40px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: #f8fafc;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            border: 2px solid #e1e5e9;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-icon {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .user-info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .info-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e1e5e9;
+        }
+
+        .info-card h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding: 5px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .info-label {
+            color: #666;
+            font-weight: 500;
+        }
+
+        .info-value {
+            color: #333;
+            font-weight: 600;
+        }
+
+        .macros-bar {
+            background: #f0f0f0;
+            height: 25px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-top: 10px;
+            display: flex;
+        }
+
+        .macro-segment {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .protein-bar {
+            background: #e74c3c;
+        }
+
+        .carbs-bar {
+            background: #3498db;
+        }
+
+        .fat-bar {
+            background: #f39c12;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 200px;
+        }
+
+        .primary-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .secondary-btn {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Chat Interface Styles */
+        .chat-container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            height: 90vh;
+            max-height: 800px;
+            display: none;
+            flex-direction: column;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .chat-container.active {
+            display: flex;
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 20px 20px 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header h2 {
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .user-info {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8fafc;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .message.user {
+            text-align: right;
+        }
+
+        .message.bot {
+            text-align: left;
+        }
+
+        .message-content {
+            display: inline-block;
+            max-width: 70%;
+            padding: 15px 20px;
+            border-radius: 18px;
+            font-size: 0.95em;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .message.bot .message-content {
+            background: white;
+            color: #333;
+            border: 1px solid #e1e5e9;
+            border-bottom-left-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .message-time {
+            font-size: 0.75em;
+            opacity: 0.6;
+            margin-top: 5px;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 15px 20px;
+            background: white;
+            border-radius: 18px;
+            border-bottom-left-radius: 5px;
+            max-width: 70px;
+            margin-bottom: 20px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #667eea;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        .chat-input {
+            padding: 20px 30px;
+            background: white;
+            border-radius: 0 0 20px 20px;
+            border-top: 1px solid #e1e5e9;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            position: relative;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e1e5e9;
+            border-radius: 25px;
+            font-size: 16px;
+            resize: none;
+            max-height: 120px;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .input-action-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .input-action-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .input-action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .input-action-btn.recording {
+            background: #e74c3c;
+            animation: pulse 1s infinite;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        /* Utility Classes */
+        .hidden {
+            display: none !important;
+        }
+
+        .error {
+            color: #e74c3c;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .success {
+            color: #27ae60;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        /* Animations */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+            }
+            30% {
+                transform: translateY(-10px);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .login-form,
+            .registration-form {
+                padding: 30px 20px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .dashboard-content {
+                padding: 20px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 15px;
+            }
+
+            .user-info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .action-btn {
+                min-width: 100%;
+            }
+
+            .chat-container {
+                height: 95vh;
+                border-radius: 15px;
+            }
+
+            .chat-header,
+            .chat-input {
+                padding: 15px 20px;
+            }
+
+            .message-content {
+                max-width: 85%;
+                padding: 12px 16px;
+            }
+
+            .logout-btn {
+                position: relative;
+                top: auto;
+                right: auto;
+                margin-top: 10px;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Login Form -->
+        <div class="login-form" id="loginForm">
+            <div class="form-header">
+                <h1><i class="fas fa-leaf"></i> Dietitian</h1>
+                <p>Welcome Back!</p>
+            </div>
+            
+            <form id="loginFormElement">
+                <div class="form-group">
+                    <label for="loginUserId"><i class="fas fa-user"></i> Username</label>
+                    <input type="text" id="loginUserId" name="userId" required placeholder="Enter your username">
+                    <div class="error" id="loginError"></div>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <span id="loginText">Login</span>
+                    <div class="loading hidden" id="loginSpinner"></div>
+                </button>
+            </form>
+
+            <div class="switch-link" onclick="switchToRegister()">
+                Don't have an account? Register here
+            </div>
+        </div>
+
+        <!-- Registration Form -->
+        <div class="registration-form hidden" id="registrationForm">
+            <div class="form-header">
+                <h1><i class="fas fa-leaf"></i> Dietitian</h1>
+                <p>Your AI-Powered Nutrition Coach</p>
+            </div>
+            
+            <form id="userForm">
+                <div class="form-group">
+                    <label for="userId"><i class="fas fa-user"></i> Username (ID)</label>
+                    <input type="text" id="userId" name="userId" required placeholder="Create a unique username">
+                    <div class="error" id="userIdError"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="name"><i class="fas fa-signature"></i> Full Name</label>
+                    <input type="text" id="name" name="name" required placeholder="Enter your full name">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="age"><i class="fas fa-birthday-cake"></i> Age</label>
+                        <input type="number" id="age" name="age" required min="15" max="90" placeholder="25">
+                    </div>
+                    <div class="form-group">
+                        <label for="gender"><i class="fas fa-venus-mars"></i> Gender</label>
+                        <select id="gender" name="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="weight"><i class="fas fa-weight"></i> Weight (kg)</label>
+                        <input type="number" id="weight" name="weight" required min="30" max="300" step="0.1" placeholder="70.5">
+                    </div>
+                    <div class="form-group">
+                        <label for="height"><i class="fas fa-ruler-vertical"></i> Height (cm)</label>
+                        <input type="number" id="height" name="height" required min="120" max="250" placeholder="175">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="activityLevel"><i class="fas fa-running"></i> Activity Level</label>
+                    <select id="activityLevel" name="activityLevel" required>
+                        <option value="">Select Activity Level</option>
+                        <option value="sedentary">Sedentary (Little/no exercise)</option>
+                        <option value="light">Light (Light exercise 1-3 days/week)</option>
+                        <option value="moderate">Moderate (Moderate exercise 3-5 days/week)</option>
+                        <option value="very_active">Very Active (Hard exercise 6-7 days/week)</option>
+                        <option value="extra_active">Extra Active (Very hard exercise/physical job)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="goal"><i class="fas fa-target"></i> Goal</label>
+                    <select id="goal" name="goal" required>
+                        <option value="">Select Your Goal</option>
+                        <option value="loss">Weight Loss</option>
+                        <option value="gain">Weight Gain</option>
+                        <option value="maintenance">Maintenance</option>
+                    </select>
+                </div>
+
+                <div class="form-group hidden" id="surplusGroup">
+                    <label for="surplus"><i class="fas fa-plus"></i> Caloric Surplus (300-500 kcal)</label>
+                    <input type="number" id="surplus" name="surplus" min="300" max="500" value="400" placeholder="400">
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <span id="submitText">Create Account</span>
+                    <div class="loading hidden" id="loadingSpinner"></div>
+                </button>
+            </form>
+
+            <div class="switch-link" onclick="switchToLogin()">
+                Already have an account? Login here
+            </div>
+        </div>
+
+        <!-- Dashboard -->
+        <div class="dashboard" id="dashboard">
+            <div class="dashboard-header">
+                <button class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+                <h1><i class="fas fa-tachometer-alt"></i> Your Nutrition Dashboard</h1>
+                <p id="dashboardWelcome">Welcome to your personalized nutrition center</p>
+            </div>
+            
+            <div class="dashboard-content">
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-fire"></i></div>
+                        <div class="stat-value" id="bmrValue">0</div>
+                        <div class="stat-label">BMR (kcal/day)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-chart-line"></i></div>
+                        <div class="stat-value" id="tdeeValue">0</div>
+                        <div class="stat-label">TDEE (kcal/day)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon"><i class="fas fa-bullseye"></i></div>
+                        <div class="stat-value" id="goalCaloriesValue">0</div>
+                        <div class="stat-label">Goal Calories</div>
+                    </div>
+                </div>
+
+                <!-- User Info Grid -->
+                <div class="user-info-grid">
+                    <div class="info-card">
+                        <h3><i class="fas fa-user-circle"></i> Personal Info</h3>
+                        <div class="info-item">
+                            <span class="info-label">Name:</span>
+                            <span class="info-value" id="dashboardName">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Age:</span>
+                            <span class="info-value" id="dashboardAge">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Gender:</span>
+                            <span class="info-value" id="dashboardGender">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Weight:</span>
+                            <span class="info-value" id="dashboardWeight">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Height:</span>
+                            <span class="info-value" id="dashboardHeight">-</span>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <h3><i class="fas fa-dumbbell"></i> Fitness Profile</h3>
+                        <div class="info-item">
+                            <span class="info-label">Activity Level:</span>
+                            <span class="info-value" id="dashboardActivity">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Goal:</span>
+                            <span class="info-value" id="dashboardGoal">-</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Member Since:</span>
+                            <span class="info-value" id="dashboardJoined">-</span>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <h3><i class="fas fa-apple-alt"></i> Daily Macros</h3>
+                        <div class="info-item">
+                            <span class="info-label">Protein:</span>
+                            <span class="info-value" id="proteinValue">0g</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Carbs:</span>
+                            <span class="info-value" id="carbsValue">0g</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">Fats:</span>
+                            <span class="info-value" id="fatValue">0g</span>
+                        </div>
+                        <div class="macros-bar">
+                            <div class="macro-segment protein-bar" id="proteinBar">Protein</div>
+                            <div class="macro-segment carbs-bar" id="carbsBar">Carbs</div>
+                            <div class="macro-segment fat-bar" id="fatBar">Fat</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="action-btn primary-btn" onclick="openChatbot()">
+                        <i class="fas fa-comments"></i> Start Coaching Chat
+                    </button>
+                    <button class="action-btn secondary-btn" onclick="updateProfile()">
+                        <i class="fas fa-edit"></i> Update Profile
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Interface -->
+        <div class="chat-container" id="chatContainer">
+            <div class="chat-header">
+                <div>
+                    <h2><i class="fas fa-robot"></i> Dietitian AI</h2>
+                    <div class="user-info" id="chatUserInfo">
+                        <span id="chatWelcomeUser"></span>
+                    </div>
+                </div>
+                <button class="back-btn" onclick="backToDashboard()">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </button>
+            </div>
+
+            <div class="chat-messages" id="chatMessages">
+                <div class="typing-indicator" id="typingIndicator">
+                    <div class="typing-dots">
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                        <div class="typing-dot"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input">
+                <div class="input-container">
+                    <textarea class="input-field" id="messageInput" placeholder="Ask me anything about nutrition, upload a food image, or record your voice..." rows="1"></textarea>
+                    <div class="input-actions">
+                        <input type="file" id="imageInput" class="file-input" accept="image/*">
+                        <button class="input-action-btn" id="imageBtn" title="Upload Food Image">
+                            <i class="fas fa-camera"></i>
+                        </button>
+                        <button class="input-action-btn" id="voiceBtn" title="Record Voice Message">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button class="input-action-btn" id="sendBtn" title="Send Message">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentUserId = null;
+        let currentUserData = null;
+        let isRecording = false;
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        let audioStream = null;
+
+        // DOM elements
+        const loginForm = document.getElementById('loginForm');
+        const registrationForm = document.getElementById('registrationForm');
+        const dashboard = document.getElementById('dashboard');
+        const chatContainer = document.getElementById('chatContainer');
+        const loginFormElement = document.getElementById('loginFormElement');
+        const userForm = document.getElementById('userForm');
+        const chatMessages = document.getElementById('chatMessages');
+        const messageInput = document.getElementById('messageInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const imageBtn = document.getElementById('imageBtn');
+        const voiceBtn = document.getElementById('voiceBtn');
+        const imageInput = document.getElementById('imageInput');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const goalSelect = document.getElementById('goal');
+        const surplusGroup = document.getElementById('surplusGroup');
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            autoResizeTextarea();
+            checkMicrophonePermissions();
+        });
+
+        function setupEventListeners() {
+            // Form submissions
+            loginFormElement.addEventListener('submit', handleLogin);
+            userForm.addEventListener('submit', handleRegistration);
+            
+            // Chat functionality
+            sendBtn.addEventListener('click', sendMessage);
+            messageInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+            
+            // File upload
+            imageBtn.addEventListener('click', () => imageInput.click());
+            imageInput.addEventListener('change', handleImageUpload);
+            
+            // Voice recording
+            voiceBtn.addEventListener('click', toggleVoiceRecording);
+            
+            // Goal change handler
+            goalSelect.addEventListener('change', function() {
+                if (this.value === 'gain') {
+                    surplusGroup.classList.remove('hidden');
+                } else {
+                    surplusGroup.classList.add('hidden');
+                }
+            });
+        }
+
+        function switchToRegister() {
+            loginForm.classList.add('hidden');
+            registrationForm.classList.remove('hidden');
+        }
+
+        function switchToLogin() {
+            registrationForm.classList.add('hidden');
+            loginForm.classList.remove('hidden');
+        }
+
+        function logout() {
+            currentUserId = null;
+            currentUserData = null;
+            dashboard.classList.remove('active');
+            chatContainer.classList.remove('active');
+            loginForm.classList.remove('hidden');
+            
+            // Clear forms
+            document.getElementById('loginUserId').value = '';
+            clearError('loginError');
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            
+            const loginBtn = document.querySelector('#loginFormElement .submit-btn');
+            const loginText = document.getElementById('loginText');
+            const loginSpinner = document.getElementById('loginSpinner');
+            
+            // Show loading state
+            loginText.classList.add('hidden');
+            loginSpinner.classList.remove('hidden');
+            loginBtn.disabled = true;
+
+            const userId = document.getElementById('loginUserId').value.trim();
+            
+            if (!userId) {
+                showError('loginError', 'Please enter your username');
+                resetLoginButton();
+                return;
+            }
+
+            try {
+                // Check if user exists by trying to get user data
+                const response = await fetch(`/api/user/${userId}`);
+                const result = await response.json();
+                
+                if (result.success && result.user) {
+                    currentUserId = userId;
+                    currentUserData = result.user;
+                    showDashboard();
+                    clearError('loginError');
+                } else {
+                    showError('loginError', 'Username not found. Please check your username or register a new account.');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showError('loginError', 'Connection error. Please try again.');
+            } finally {
+                resetLoginButton();
+            }
+        }
+
+        function resetLoginButton() {
+            const loginText = document.getElementById('loginText');
+            const loginSpinner = document.getElementById('loginSpinner');
+            const loginBtn = document.querySelector('#loginFormElement .submit-btn');
+            
+            loginText.classList.remove('hidden');
+            loginSpinner.classList.add('hidden');
+            loginBtn.disabled = false;
+        }
+
+        function autoResizeTextarea() {
+            messageInput.addEventListener('input', function() {
+                this.style.height = 'auto';
+                this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+            });
+        }
+
+        async function checkMicrophonePermissions() {
+            try {
+                const permissions = await navigator.permissions.query({ name: 'microphone' });
+                if (permissions.state === 'denied') {
+                    voiceBtn.title = 'Microphone access denied. Please enable in browser settings.';
+                    voiceBtn.style.opacity = '0.5';
+                }
+            } catch (error) {
+                console.log('Could not check microphone permissions:', error);
+            }
+        }
+
+        async function handleRegistration(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.querySelector('#userForm .submit-btn');
+            const submitText = document.getElementById('submitText');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+            
+            // Show loading state
+            submitText.classList.add('hidden');
+            loadingSpinner.classList.remove('hidden');
+            submitBtn.disabled = true;
+
+            const formData = new FormData(userForm);
+            const userData = Object.fromEntries(formData.entries());
+            
+            // Convert numeric fields
+            userData.age = parseInt(userData.age);
+            userData.weight = parseFloat(userData.weight);
+            userData.height = parseFloat(userData.height);
+            if (userData.surplus) {
+                userData.surplus = parseInt(userData.surplus);
+            }
+
+            try {
+                // Check if user exists and create/update profile
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(userData)
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    currentUserId = userData.userId;
+                    currentUserData = userData;
+                    currentUserData.nutrition = result.nutrition;
+                    showDashboard();
+                    clearError('userIdError');
+                } else {
+                    showError('userIdError', result.message || 'Registration failed');
+                }
+            } catch (error) {
+                console.error('Registration error:', error);
+                showError('userIdError', 'Connection error. Please try again.');
+            } finally {
+                // Hide loading state
+                submitText.classList.remove('hidden');
+                loadingSpinner.classList.add('hidden');
+                submitBtn.disabled = false;
+            }
+        }
+
+        function showError(elementId, message) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.textContent = message;
+            errorElement.style.display = 'block';
+            
+            // Clear error after 5 seconds
+            setTimeout(() => {
+                errorElement.style.display = 'none';
+            }, 5000);
+        }
+
+        function clearError(elementId) {
+            const errorElement = document.getElementById(elementId);
+            errorElement.style.display = 'none';
+            errorElement.textContent = '';
+        }
+
+        function showDashboard() {
+            loginForm.classList.add('hidden');
+            registrationForm.classList.add('hidden');
+            dashboard.classList.add('active');
+            
+            // Update dashboard with user data
+            populateDashboard();
+        }
+
+        function populateDashboard() {
+            if (!currentUserData) return;
+
+            // Update welcome message
+            document.getElementById('dashboardWelcome').textContent = 
+                `Welcome back, ${currentUserData.name || currentUserId}! Here's your nutrition overview.`;
+
+            // Update personal info
+            document.getElementById('dashboardName').textContent = currentUserData.name || currentUserId;
+            document.getElementById('dashboardAge').textContent = `${currentUserData.age || '-'} years`;
+            document.getElementById('dashboardGender').textContent = 
+                currentUserData.gender ? currentUserData.gender.charAt(0).toUpperCase() + currentUserData.gender.slice(1) : '-';
+            document.getElementById('dashboardWeight').textContent = currentUserData.weight ? `${currentUserData.weight} kg` : '-';
+            document.getElementById('dashboardHeight').textContent = currentUserData.height ? `${currentUserData.height} cm` : '-';
+
+            // Update activity and goal
+            const activityLabels = {
+                'sedentary': 'Sedentary',
+                'light': 'Light Activity',
+                'moderate': 'Moderate Activity',
+                'very_active': 'Very Active',
+                'extra_active': 'Extra Active'
+            };
+            document.getElementById('dashboardActivity').textContent = 
+                activityLabels[currentUserData.activity_level] || currentUserData.activity_level || '-';
+            document.getElementById('dashboardGoal').textContent = 
+                currentUserData.goal ? currentUserData.goal.charAt(0).toUpperCase() + currentUserData.goal.slice(1) : '-';
+            document.getElementById('dashboardJoined').textContent = currentUserData.created_at || 'Today';
+
+            // Update nutrition stats
+            if (currentUserData.nutrition) {
+                const nutrition = currentUserData.nutrition;
+                document.getElementById('bmrValue').textContent = nutrition.BMR || 0;
+                document.getElementById('tdeeValue').textContent = nutrition.TDEE || 0;
+                document.getElementById('goalCaloriesValue').textContent = nutrition['Goal Calories'] || 0;
+
+                if (nutrition.Macros) {
+                    const macros = nutrition.Macros;
+                    document.getElementById('proteinValue').textContent = `${macros.protein_g}g`;
+                    document.getElementById('carbsValue').textContent = `${macros.carbs_g}g`;
+                    document.getElementById('fatValue').textContent = `${macros.fat_g}g`;
+
+                    // Update macro bars
+                    const totalMacros = macros.protein_g + macros.carbs_g + macros.fat_g;
+                    const proteinPercent = (macros.protein_g / totalMacros * 100).toFixed(1);
+                    const carbsPercent = (macros.carbs_g / totalMacros * 100).toFixed(1);
+                    const fatPercent = (macros.fat_g / totalMacros * 100).toFixed(1);
+
+                    document.getElementById('proteinBar').style.width = `${proteinPercent}%`;
+                    document.getElementById('carbsBar').style.width = `${carbsPercent}%`;
+                    document.getElementById('fatBar').style.width = `${fatPercent}%`;
+                }
+            }
+        }
+
+        function openChatbot() {
+            dashboard.classList.remove('active');
+            chatContainer.classList.add('active');
+            
+            // Update chat user info
+            document.getElementById('chatWelcomeUser').textContent = `Chat with ${currentUserData.name || currentUserId}`;
+            
+            // Add welcome message
+            addMessage('bot', `Hello ${currentUserData.name || currentUserId}! I'm your personal nutrition coach. I've calculated your daily needs and I'm here to help you with:
+
+• Calorie and macro tracking
+• Food analysis from images  
+• Nutrition advice and meal planning
+• Voice-based interactions
+• Goal achievement strategies
+
+Your profile is all set up! How can I help you today?`);
+        }
+
+        function backToDashboard() {
+            chatContainer.classList.remove('active');
+            dashboard.classList.add('active');
+        }
+
+        function updateProfile() {
+            dashboard.classList.remove('active');
+            registrationForm.classList.remove('hidden');
+            
+            // Pre-fill form with current data
+            if (currentUserData) {
+                document.getElementById('userId').value = currentUserId;
+                document.getElementById('name').value = currentUserData.name || '';
+                document.getElementById('age').value = currentUserData.age || '';
+                document.getElementById('gender').value = currentUserData.gender || '';
+                document.getElementById('weight').value = currentUserData.weight || '';
+                document.getElementById('height').value = currentUserData.height || '';
+                document.getElementById('activityLevel').value = currentUserData.activity_level || '';
+                document.getElementById('goal').value = currentUserData.goal || '';
+                if (currentUserData.surplus) {
+                    document.getElementById('surplus').value = currentUserData.surplus;
+                }
+            }
+        }
+
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message && !imageInput.files[0]) return;
+
+            addMessage('user', message || 'Uploaded an image');
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+            
+            showTypingIndicator();
+
+            try {
+                const formData = new FormData();
+                formData.append('user_id', currentUserId);
+                formData.append('message', message);
+                
+                if (imageInput.files[0]) {
+                    formData.append('image', imageInput.files[0]);
+                    imageInput.value = '';
+                }
+
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+                
+                hideTypingIndicator();
+                
+                if (result.success) {
+                    addMessage('bot', result.response);
+                } else {
+                    addMessage('bot', 'Sorry, I encountered an error. Please try again.');
+                }
+            } catch (error) {
+                console.error('Chat error:', error);
+                hideTypingIndicator();
+                addMessage('bot', 'Connection error. Please check your connection and try again.');
+            }
+        }
+
+        function addMessage(sender, content) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const timestamp = new Date().toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            messageDiv.innerHTML = `
+                <div class="message-content">${content}</div>
+                <div class="message-time">${timestamp}</div>
+            `;
+            
+            chatMessages.insertBefore(messageDiv, typingIndicator);
+            scrollToBottom();
+        }
+
+        function showTypingIndicator() {
+            typingIndicator.style.display = 'block';
+            scrollToBottom();
+        }
+
+        function hideTypingIndicator() {
+            typingIndicator.style.display = 'none';
+        }
+
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function handleImageUpload() {
+            if (imageInput.files[0]) {
+                const fileName = imageInput.files[0].name;
+                messageInput.placeholder = `Image selected: ${fileName}`;
+            }
+        }
+
+        async function toggleVoiceRecording() {
+            if (!isRecording) {
+                try {
+                    // Request microphone access
+                    audioStream = await navigator.mediaDevices.getUserMedia({ 
+                        audio: {
+                            echoCancellation: true,
+                            noiseSuppression: true,
+                            autoGainControl: true
+                        } 
+                    });
+                    
+                    // Check if browser supports MediaRecorder
+                    if (!MediaRecorder.isTypeSupported('audio/webm')) {
+                        throw new Error('Browser does not support audio recording');
+                    }
+                    
+                    mediaRecorder = new MediaRecorder(audioStream, {
+                        mimeType: 'audio/webm'
+                    });
+                    
+                    recordedChunks = [];
+                    
+                    mediaRecorder.addEventListener('dataavailable', event => {
+                        if (event.data.size > 0) {
+                            recordedChunks.push(event.data);
+                        }
+                    });
+                    
+                    mediaRecorder.addEventListener('stop', async () => {
+                        const audioBlob = new Blob(recordedChunks, { type: 'audio/webm' });
+                        await sendVoiceMessage(audioBlob);
+                        
+                        // Clean up
+                        if (audioStream) {
+                            audioStream.getTracks().forEach(track => track.stop());
+                            audioStream = null;
+                        }
+                    });
+                    
+                    mediaRecorder.start(1000); // Collect data every second
+                    isRecording = true;
+                    
+                    // Update button appearance
+                    voiceBtn.classList.add('recording');
+                    voiceBtn.innerHTML = '<i class="fas fa-stop"></i>';
+                    voiceBtn.title = 'Stop recording';
+                    
+                    // Add visual feedback
+                    addMessage('bot', 'Recording... Click the stop button when you\'re done speaking.');
+                    
+                } catch (error) {
+                    console.error('Error accessing microphone:', error);
+                    let errorMessage = 'Could not access your microphone. ';
+                    
+                    if (error.name === 'NotAllowedError') {
+                        errorMessage += 'Please allow microphone access and try again.';
+                    } else if (error.name === 'NotFoundError') {
+                        errorMessage += 'No microphone found.';
+                    } else {
+                        errorMessage += 'Please check your microphone settings.';
+                    }
+                    
+                    addMessage('bot', errorMessage);
+                }
+            } else {
+                // Stop recording
+                if (mediaRecorder && mediaRecorder.state === 'recording') {
+                    mediaRecorder.stop();
+                }
+                
+                isRecording = false;
+                
+                // Reset button appearance
+                voiceBtn.classList.remove('recording');
+                voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                voiceBtn.title = 'Record Voice Message';
+            }
+        }
+
+        async function sendVoiceMessage(audioBlob) {
+            addMessage('user', 'Voice message');
+            showTypingIndicator();
+            
+            try {
+                const formData = new FormData();
+                formData.append('user_id', currentUserId);
+                formData.append('audio', audioBlob, 'voice.webm');
+                
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                hideTypingIndicator();
+                
+                if (result.success) {
+                    addMessage('bot', result.response);
+                } else {
+                    addMessage('bot', 'Sorry, I could not understand your voice message. Please try typing your message or record again.');
+                }
+            } catch (error) {
+                console.error('Voice message error:', error);
+                hideTypingIndicator();
+                addMessage('bot', 'Error processing voice message. Please try again or type your message.');
+            }
+        }
+    </script>
+</body>
+</html>
