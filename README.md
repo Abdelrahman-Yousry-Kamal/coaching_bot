@@ -179,40 +179,6 @@ export FLASK_DEBUG=True
 python flask_server.py
 ```
 
-### Running Tests
-
-```bash
-# Unit tests
-python -m pytest tests/ -v
-
-# Integration tests
-python -m pytest tests/integration/ -v
-
-# Coverage report
-python -m pytest --cov=. --cov-report=html
-```
-
-### Code Quality
-
-```bash
-# Format code
-black .
-
-# Lint code
-flake8 .
-
-# Type checking
-mypy .
-```
-
-## 📊 Performance
-
-### Benchmarks
-- **Text Response**: ~800ms average
-- **Image Analysis**: ~2.5s average
-- **Voice Processing**: ~1.8s average
-- **Database Query**: ~50ms average
-
 ### Optimization Tips
 - Use high-quality, well-lit images for better accuracy
 - Ensure clear audio with minimal background noise
